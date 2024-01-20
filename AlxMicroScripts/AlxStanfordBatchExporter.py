@@ -3,10 +3,11 @@ bl_info = {
     "author" : "Valeria Bosco[Valy Arhal]",
     "description" : "Exports the entire mesh selection as singular Stanford .ply files, file name based on object name, Exports to a [Stanford PLY Export] subfolder of the specified path",
     "version" : (1, 0, 0),
+    "blender" : (3, 6, 0),
+    "support" : "COMMUNITY",
     "warning" : "",
     "category" : "3D View",
-    "location" : "",
-    "blender" : (3, 6, 0)
+    "location" : ""
 }
 
 import bpy
@@ -73,7 +74,6 @@ class Alx_OT_BatchPLYExport(bpy.types.Operator):
                     for DataObject in bpy.data.objects:
                         DataObject.select_set(False)
 
-
                     ExportObject.select_set(True)
                     bpy.context.view_layer.objects.active = ExportObject
 
@@ -110,6 +110,8 @@ def register():
 def unregister():
     for AlxQCls in AlxClassQueue:
         bpy.utils.unregister_class(AlxQCls)
+
+    del bpy.types.Scene.UserSelectedPath
 
 if __name__ == "__main__":
     register()

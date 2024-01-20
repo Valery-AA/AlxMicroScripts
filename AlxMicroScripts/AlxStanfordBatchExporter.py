@@ -1,7 +1,7 @@
 bl_info = {
     "name" : "Batch PLY",
     "author" : "Valeria Bosco[Valy Arhal]",
-    "description" : "Exports the entire mesh selection as singular Stanford .ply files, file name based on object name, batch export folder is where the .blend file is located",
+    "description" : "Exports the entire mesh selection as singular Stanford .ply files, file name based on object name, Exports to a [Stanford PLY Export] subfolder of the specified path",
     "version" : (1, 0, 0),
     "warning" : "",
     "category" : "3D View",
@@ -22,14 +22,14 @@ class Alx_PT_PLYExport(bpy.types.Panel):
     bl_space_type = "VIEW_3D"
     bl_category = "Alx Export"
 
-    
-
     @classmethod
     def poll(self, context):
         return True
     
     def draw(self, context):
         AlxLayout = self.layout
+
+        AlxLayout.row().prop(context.scene, "UserSelectedPath")
         AxlOPS_PLY_Export = AlxLayout.row().operator(Alx_OT_BatchPLYExport.bl_idname, text="Export Stanford (.ply)")
 
 class Alx_OT_BatchPLYExport(bpy.types.Operator):
@@ -58,9 +58,9 @@ class Alx_OT_BatchPLYExport(bpy.types.Operator):
                     ObjectListToExport.append(Object)
 
             for ExportObject in ObjectListToExport:
-                blend_file_path = bpy.data.filepath
-                if (blend_file_path != ""):
-                    directory = os.path.dirname(blend_file_path)
+                export_file_path = context.scene.UserSelectedPath
+                if (export_file_path != ""):
+                    directory = os.path.dirname(export_file_path)
 
                     export_directory_name = "Stanford Batch Export"
                     export_directory = os.path.join(directory, export_directory_name)
@@ -102,6 +102,8 @@ AlxClassQueue = [Alx_OT_BatchPLYExport, Alx_PT_PLYExport]
 def register():
     for AlxQCls in AlxClassQueue:
         bpy.utils.register_class(AlxQCls)
+
+    bpy.types.Scene.UserSelectedPath = bpy.props.StringProperty(name="Export Path", default="", subtype="DIR_PATH")
 
     bpy.context.preferences.use_preferences_save = True
 

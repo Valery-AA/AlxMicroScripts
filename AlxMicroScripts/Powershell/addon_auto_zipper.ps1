@@ -1,11 +1,7 @@
-$target_subfolder = Split-Path -Path '.\AlxQuickActions' -Leaf -Resolve
+$parent_directory = Split-Path -Path (Get-Location) -Leaf -Resolve
+$target_subfolder = Split-Path -Path ".\$parent_directory" -Leaf -Resolve
 
-$target_zip_file = 'AlxQuickActions.zip'
-if (Test-Path .\$target_zip_file)
-{
-    Remove-Item .\$target_zip_file
-}
 if ( Test-Path .\$target_subfolder)
 {
-    Compress-Archive -Path .\$target_subfolder -Destination .\$target_subfolder.zip
-}
+    Compress-Archive -Force -Path .\$target_subfolder -Destination .\$target_subfolder.zip
+} 
